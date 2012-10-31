@@ -90,8 +90,6 @@ class arxiv_page:
     hist = {}
     for word in words:
       word = word.lower()
-      if "des" in word:
-        sys.exit(words)
       if word in ignored_words:
         continue
       hist[word] = hist.get(word, 0) + 1    
