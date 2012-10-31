@@ -49,14 +49,15 @@ class arxiv_page:
     self.page = page    
     self.downloaded = False
 
-
   def __remove_punctuation(self,string,punctuation=['?','!','.',',','"','>','<','[',']','{','}',')','(']):
     for i in punctuation:
       string = string.replace(i,'')
     return string
 
-
-
+  def __parse_date(self):
+    soup = self.soup
+    return soup.find_all('div',class_='list-dateline')[0].text
+   
   def __parse_titles(self):
     titles = []
     soup = self.soup
@@ -108,6 +109,7 @@ class arxiv_page:
     from bs4 import BeautifulSoup
     raw_html = urlopen(self.page).read()
     self.soup = BeautifulSoup(raw_html)
+    self.date_line = self.__parse_date()
     self.downloaded = True
 
 
@@ -136,6 +138,15 @@ class arxiv_page:
       a.extend(self.__parse_authors())
       self.hist['authors'] = self.__histogram(a,ignored_words=ignored_words)
 
+
+def checkLastScrape(page,file='parxiv.last'):
+  with open(file,'r') as fp:
+    last = fp.read()
+    if last == page.date_line:
+      logger.info("Same date-line as previous parse. Exiting")
+      sys.exit(0)
+  with open(file,'w') as fp:
+    fp.write(page.date_line)
       
 def init_db(db):
   logger.info("Initialized database [%s] for the first time." % db)
@@ -154,10 +165,14 @@ def main(argv=sys.argv):
     init_db(db) 
   db = sqlite3.connect(db)
 
+  if not os.path.exists('parxiv.last'):
+    open('parxiv.last','w').close()
+
   page = arxiv_page()
   page.download()
   page.parse()
-
+  checkLastScrape(page)
+  
   today = datetime.date.today().isoformat() 
   for tbl_name in page.hist.keys():
     for word,count in page.hist[tbl_name].iteritems():
@@ -177,6 +192,8 @@ def main(argv=sys.argv):
 if __name__ == "__main__":
   try:
     main()
+  except SystemExit:
+    pass
   except:
     dumpTraceback(filename)
 
