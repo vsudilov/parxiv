@@ -23,7 +23,8 @@ logging.root.setLevel(logging.DEBUG)
 
 ch = logging.StreamHandler() #console handler
 ch.setFormatter(formatter)
-#if not os.path.isdir("logs"): os.mkdir("logs")
+if not os.path.isdir(os.path.join(os.path.expanduser('~'),"logs")): 
+  os.mkdir(os.path.join(os.path.expanduser('~'),"logs"))
 fh = logging.FileHandler(filename=filename) #file handler
 fh.setFormatter(formatter)
 rfh = logging.handlers.RotatingFileHandler(filename=filename,maxBytes=1000000,backupCount=5)
@@ -89,6 +90,8 @@ class arxiv_page:
     hist = {}
     for word in words:
       word = word.lower()
+      if "des" in word:
+        sys.exit(words)
       if word in ignored_words:
         continue
       hist[word] = hist.get(word, 0) + 1    
@@ -111,13 +114,13 @@ class arxiv_page:
 
 
 
-  def parse(self,titles=True,abstracts=True,authors=True,ignored_words = []):
-    '''
-    ignored_words=["we","the","a","an","in","be","would","of","that", \
-     "are","is","to","with","for","all","by","further", \
-     "at","also","for","too","or","which","they","between", \
-     "this","their"]):
-    '''
+  def parse(self,titles=True,abstracts=True,authors=True, ignored_words=["we","the","a","an","in",
+     "be","would","of","that","are","is","to","with","for","all","by","further", 
+     "at","also","from","too","or","which","they","between","this","their","we",
+     "our","these","its","it","using","has","have","than","on","and","will","as",
+     "can","not","cannot","where","but","into","use","used"]):
+    
+    
     if not self.downloaded:
       self.download()
      
