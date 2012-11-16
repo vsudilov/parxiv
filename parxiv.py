@@ -139,7 +139,7 @@ class arxiv_page:
       self.hist['authors'] = self.__histogram(a,ignored_words=ignored_words)
 
 
-def checkLastScrape(page,file='parxiv.last'):
+def checkLastScrape(page,file=os.path.join(os.path.dirname(__file__),'parxiv.last')):
   with open(file,'r') as fp:
     last = fp.read()
     if last == page.date_line:
@@ -165,8 +165,8 @@ def main(argv=sys.argv):
     init_db(db) 
   db = sqlite3.connect(db)
 
-  if not os.path.exists('parxiv.last'):
-    open('parxiv.last','w').close()
+  if not os.path.exists(os.path.join(os.path.dirname(__file__),'parxiv.last')):
+    open(os.path.join(os.path.dirname(__file__),'parxiv.last','w')).close()
 
   page = arxiv_page()
   page.download()
