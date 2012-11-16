@@ -73,7 +73,7 @@ class arxiv_page:
     soup = self.soup
     for i in soup.find_all('div',class_='list-authors'):
       for j in i.find_all('a'):
-        authors.extend(j.text)
+        authors.append(j.text)
     return authors
 
 
