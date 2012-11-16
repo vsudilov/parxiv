@@ -49,16 +49,16 @@ class arxiv_page:
     self.page = page    
     self.downloaded = False
 
-  def __remove_punctuation(self,string,punctuation=['?','!','.',',','"','>','<','[',']','{','}',')','(']):
+  def _remove_punctuation(self,string,punctuation=['?','!','.',',','"','>','<','[',']','{','}',')','(']):
     for i in punctuation:
       string = string.replace(i,'')
     return string
 
-  def __parse_date(self):
+  def _parse_date(self):
     soup = self.soup
     return soup.find_all('div',class_='list-dateline')[0].text
    
-  def __parse_titles(self):
+  def _parse_titles(self):
     titles = []
     soup = self.soup
     for i in soup.find_all('div',class_='list-title'):
@@ -68,7 +68,7 @@ class arxiv_page:
     return titles
 
 
-  def __parse_authors(self):
+  def _parse_authors(self):
     authors = []
     soup = self.soup
     for i in soup.find_all('div',class_='list-authors'):
@@ -77,7 +77,7 @@ class arxiv_page:
     return authors
 
 
-  def __parse_abstracts(self):
+  def _parse_abstracts(self):
     words = []
     soup = self.soup
     for i in soup.find_all('p')[:-1]:
@@ -87,7 +87,7 @@ class arxiv_page:
       words.extend(abstract.split())
     return words
 
-  def __histogram(self,words,ignored_words=[]):
+  def _histogram(self,words,ignored_words=[]):
     hist = {}
     for word in words:
       word = word.lower()
