@@ -63,7 +63,7 @@ class arxiv_page:
     soup = self.soup
     for i in soup.find_all('div',class_='list-title'):
       title = i.find_all('span')[0].nextSibling.strip()
-      title = self.__remove_punctuation(title)
+      title = self._remove_punctuation(title)
       titles.extend(title.split())
     return titles
 
@@ -83,7 +83,7 @@ class arxiv_page:
     for i in soup.find_all('p')[:-1]:
       abstract = i.text.strip()
       abstract = abstract.replace('\n',' ')
-      abstract = self.__remove_punctuation(abstract)
+      abstract = self._remove_punctuation(abstract)
       words.extend(abstract.split())
     return words
 
@@ -109,7 +109,7 @@ class arxiv_page:
     from bs4 import BeautifulSoup
     raw_html = urlopen(self.page).read()
     self.soup = BeautifulSoup(raw_html)
-    self.date_line = self.__parse_date()
+    self.date_line = self._parse_date()
     self.downloaded = True
 
 
@@ -127,16 +127,16 @@ class arxiv_page:
     words,a,t = [],[],[]
     self.hist = {}
     if titles:
-      t.extend(self.__parse_titles())  
-      self.hist['titles'] = self.__histogram(t,ignored_words=ignored_words)
+      t.extend(self._parse_titles())  
+      self.hist['titles'] = self._histogram(t,ignored_words=ignored_words)
 
     if abstracts:      
-      words.extend(self.__parse_abstracts())
-      self.hist['abstracts'] = self.__histogram(words,ignored_words=ignored_words)
+      words.extend(self._parse_abstracts())
+      self.hist['abstracts'] = self._histogram(words,ignored_words=ignored_words)
 
     if authors:      
-      a.extend(self.__parse_authors())
-      self.hist['authors'] = self.__histogram(a,ignored_words=ignored_words)
+      a.extend(self._parse_authors())
+      self.hist['authors'] = self_histogram(a,ignored_words=ignored_words)
 
 
 def checkLastScrape(page,file=os.path.join(os.path.dirname(__file__),'parxiv.last')):
