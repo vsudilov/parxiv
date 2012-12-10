@@ -136,7 +136,7 @@ class arxiv_page:
 
     if authors:      
       a.extend(self._parse_authors())
-      self.hist['authors'] = self_histogram(a,ignored_words=ignored_words)
+      self.hist['authors'] = self._histogram(a,ignored_words=ignored_words)
 
 
 def checkLastScrape(page,file=os.path.join(os.path.dirname(__file__),'parxiv.last')):
