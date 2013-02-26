@@ -2,7 +2,7 @@
 '''
 USAGE: parxiv.py database
 
-Creates a histogram of words in the titles,abstracts,and authors of the the arxiv astro-PH "new" page and stores this in <database>.
+Creates a histogram of words in the titles,abstracts,and authors of the the arxiv astro-PH "new" page and stores this in a sqltie3 database.
 '''
 
 
@@ -14,7 +14,8 @@ import sqlite3
 #Setup logging
 import logging
 import logging.handlers
-filename = os.path.join(os.path.expanduser('~'),'logs/parxiv.log')
+#filename = os.path.join(os.path.expanduser('~'),'logs/parxiv.log')
+filename = os.path.join(os.path.dirname(__file__),'parxiv.log')
 logfmt = '%(levelname)s:  %(message)s\t(%(asctime)s)'
 datefmt= '%m/%d/%Y %I:%M:%S %p'
 formatter = logging.Formatter(fmt=logfmt,datefmt=datefmt)
@@ -166,7 +167,7 @@ def main(argv=sys.argv):
   db = sqlite3.connect(db)
 
   if not os.path.exists(os.path.join(os.path.dirname(__file__),'parxiv.last')):
-    open(os.path.join(os.path.dirname(__file__),'parxiv.last','w')).close()
+    open(os.path.join(os.path.dirname(__file__),'parxiv.last'),'w').close()
 
   page = arxiv_page()
   page.download()
